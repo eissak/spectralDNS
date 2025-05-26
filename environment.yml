@@ -1,4 +1,4 @@
-name: testspectralDNS
+name: spectralDNS
 channels:
   - conda-forge
   - defaults
