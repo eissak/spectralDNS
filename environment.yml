@@ -1,0 +1,19 @@
+name: testspectralDNS
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - cython
+  - h5py[build=mpi*]
+  - matplotlib=3.7
+  - mpi4py-fft
+  - mpich
+  - numba
+  - numpy[version='<2']
+  - pip
+  - python=3.11
+  - pythran
+  - setuptools[version='<65']
+  - shenfun
+  - pip:
+      - nodepy==1.0.1
