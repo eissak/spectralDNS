@@ -1,7 +1,6 @@
 name: spectralDNS
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - cython
   - h5py[build=mpi*]
