@@ -24,15 +24,7 @@ A channel flow solver is implemented using the Shen basis (Jie Shen, SIAM Journa
 
 Installation
 -----------
-spectralDNS contains a setup.py script and can be installed by cloning or forking the repository and then with regular python distutils
-
-    python setup.py install --prefix="path used for installation. Must be on the PYTHONPATH"
-
-or in-place using
-
-    python setup.py build_ext --inplace
-
-However, spectralDNS depends on two other modules in the [spectralDNS](https://github.com/spectralDNS) organization: [shenfun](https://github.com/spectralDNS/shenfun) and [mpi4py-fft](https://github.com/spectralDNS/mpi4py-fft). And besides that, it requires [*h5py*](http://www.h5py.org) built with parallel HDF5, for visualizing the results, and [*cython*](http://cython.org), [*numba*](http://numba.pydata.org) or [*pythran*](https://github.com/serge-sans-paille/pythran) are used to optimize a few routines. These dependencies are all available on [*conda forge*](https://conda-forge.org) and a proper environment would be
+SpectralDNS depends on two other modules in the [spectralDNS](https://github.com/spectralDNS) organization: [shenfun](https://github.com/spectralDNS/shenfun) and [mpi4py-fft](https://github.com/spectralDNS/mpi4py-fft). And besides that, it requires [*h5py*](http://www.h5py.org) built with parallel HDF5, for visualizing the results, and [*cython*](http://cython.org), [*numba*](http://numba.pydata.org) or [*pythran*](https://github.com/serge-sans-paille/pythran) are used to optimize a few routines. These dependencies are all available on [*conda forge*](https://conda-forge.org) and a proper environment would be
 
     conda env create -f environment.yml
     conda activate spectralDNS
@@ -40,8 +32,12 @@ However, spectralDNS depends on two other modules in the [spectralDNS](https://g
 Furthermore, you may want to use [*matplotlib*](https://matplotlib.org) for plotting and [*nodepy*](https://github.com/ketch/nodepy) is used for some of the integrators. The latter should be installed using [*pypi*](https://pypi.org)
 
     pip install nodepy
+	
+SpectralDNS contains a setup.py script and can be installed by cloning or forking the repository and then with pip
 
-Another possibility is to compile spectralDNS yourselves using [*conda build*](https://docs.conda.io/projects/conda-build/en/latest/). From the main directory after forking or cloning do, e.g.,
+    pip install --prefix="path used for installation. Must be on the PYTHONPATH" --no-build-isolation .
+
+*Not recommended* Another possibility is to compile spectralDNS yourselves using [*conda build*](https://docs.conda.io/projects/conda-build/en/latest/). From the main directory after forking or cloning do, e.g.,
 
     conda build -c conda-forge conf/conda
     conda install spectralDNS --use-local
