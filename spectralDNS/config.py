@@ -304,11 +304,12 @@ Coupled.add_argument('--integrator', default='implicit', choices=('implicit',), 
 CoupledRK3 = channelsubparsers.add_parser('CoupledRK3', help='Coupled channel solver with RK3.')
 CoupledRK3.add_argument('--integrator', default='implicit', choices=('implicit',), help='Coupled RK3 integrator for channel solver')
 
-def update(new, mesh="triplyperiodic"):
+def update(new, solver):
     """Update spectralDNS parameters"""
     global fft_plans
     assert isinstance(new, dict)
     if 'planner_effort' in new:
         fft_plans.update(new['planner_effort'])
         new['planner_effort'] = fft_plans
-    globals()[mesh].set_defaults(**new)
+    parser = f'parser_{solver}'
+    globals()[parser].set_defaults(**new)
