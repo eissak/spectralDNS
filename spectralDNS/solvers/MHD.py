@@ -68,7 +68,7 @@ def get_context():
     # Primary variable
     u = UB_hat
 
-    hdf5file = MHDFile(config.params.solver,
+    hdf5file = MHDFile(config.params.h5filename,
                        checkpoint={'space': VM,
                                    'data': {'0': {'UB': [UB_hat]}}},
                        results={'space': VM,
