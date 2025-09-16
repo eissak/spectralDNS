@@ -234,6 +234,7 @@ parser_NS = trippelsubparsers.add_parser('NS', help='Regular Navier Stokes solve
 parser_VV = trippelsubparsers.add_parser('VV', help='Velocity-Vorticity formulation')
 parser_MHD = trippelsubparsers.add_parser('MHD', help='Magnetohydrodynamics solver')
 parser_MHD.add_argument('--eta', default=0.01, type=float, help='MHD parameter')
+parser_MHD.add_argument('--hyperdiffusion', default=None, type=float, help='Hyperdiffusion index')
 parser_Bq = trippelsubparsers.add_parser('Bq', help='Navier Stokes solver with Boussinesq model')
 parser_Bq.add_argument('--Ri', default=0.1, type=float, help='Richardson number')
 parser_Bq.add_argument('--Pr', default=1.0, type=float, help='Prandtl number')

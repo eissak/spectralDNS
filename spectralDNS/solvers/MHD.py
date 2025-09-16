@@ -48,6 +48,11 @@ def get_context():
     K_over_K2 = np.zeros(VT.shape(True), dtype=float)
     for i in range(dim):
         K_over_K2[i] = K[i] / np.where(K2 == 0, 1, K2)
+	
+	# K2 actually K^(2\alpha)
+    alpha = config.params.hyperdiffusion
+    if alpha:
+        K2 **= alpha
 
     UB = Array(VM)
     P = Array(T)
