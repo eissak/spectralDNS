@@ -63,7 +63,7 @@ def get_context():
     Source = Array(VM)
     ub_dealias = Array(VMp)
     ZZ_hat = np.zeros((3, 3) + Tp.shape(True), dtype=complex) # Work array
-	work = work_arrays()
+    work = work_arrays()
 
     # Create views into large data structures
     U = UB[:3]
