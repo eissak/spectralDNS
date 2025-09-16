@@ -63,6 +63,7 @@ def get_context():
     Source = Array(VM)
     ub_dealias = Array(VMp)
     ZZ_hat = np.zeros((3, 3) + Tp.shape(True), dtype=complex) # Work array
+	work = work_arrays()
 
     # Create views into large data structures
     U = UB[:3]
@@ -85,6 +86,20 @@ class MHDFile(HDF5File):
     def update_components(self, UB, UB_hat, **kw):
         """Transform to real data when storing the solution"""
         UB = UB_hat.backward(UB)
+
+def get_ub(UB, UB_hat, **context):
+    UB = UB_hat.backward(UB)
+    return UB
+
+def get_current(curl, B_hat, work, VT, K, **context):
+    curl_hat = work[(B_hat, 0, False)]
+    curl_hat = cross2(curl_hat, K, B_hat)
+    curl = VT.backward(curl_hat, curl)
+    return curl
+
+def get_pressure(P, P_hat, T, **context):
+    P = T.backward(-1j*P_hat, P)
+    return P
 
 def get_divergence(T, K, U_hat, **context):
     div_u = Array(T)
