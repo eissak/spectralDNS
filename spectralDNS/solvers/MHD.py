@@ -97,6 +97,9 @@ def get_current(curl, B_hat, work, VT, K, **context):
     curl = VT.backward(curl_hat, curl)
     return curl
 
+def get_vorticity(curl, U_hat, work, VT, K, **context):
+    return get_current(curl, U_hat, work, VT, K, **context)
+
 def get_pressure(P, P_hat, T, **context):
     P = T.backward(-1j*P_hat, P)
     return P
