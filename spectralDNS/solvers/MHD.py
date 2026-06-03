@@ -48,7 +48,7 @@ def get_context():
     K_over_K2 = np.zeros(VT.shape(True), dtype=float)
     for i in range(dim):
         K_over_K2[i] = K[i] / np.where(K2 == 0, 1, K2)
-	
+
 	# K2 actually K^(2\alpha)
     alpha = config.params.hyperdiffusion
     if alpha:
@@ -91,14 +91,12 @@ def get_ub(UB, UB_hat, **context):
     UB = UB_hat.backward(UB)
     return UB
 
-def get_current(curl, B_hat, work, VT, K, **context):
-    curl_hat = work[(B_hat, 0, False)]
-    curl_hat = cross2(curl_hat, K, B_hat)
-    curl = VT.backward(curl_hat, curl)
-    return curl
-
-def get_vorticity(curl, U_hat, work, VT, K, **context):
-    return get_current(curl, U_hat, work, VT, K, **context)
+def get_curl(curl, UB_hat, work, VM, K, **context):
+     curl_hat = work[(UB_hat, 0, False)]
+     curl_hat[:3] = cross2(curl_hat[:3], K, UB_hat[:3])
+     curl_hat[3:] = cross2(curl_hat[3:], K, UB_hat[3:])
+     curl = VM.backward(curl_hat, curl)
+     return curl
 
 def get_pressure(P, P_hat, T, **context):
     P = T.backward(-1j*P_hat, P)
