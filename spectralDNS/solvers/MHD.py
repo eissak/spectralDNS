@@ -56,7 +56,7 @@ def get_context():
 
     UB = Array(VM)
     P = Array(T)
-    curl = Array(VT)
+    curl = Array(VM)
     UB_hat = Function(VM)
     P_hat = Function(T)
     dU = Function(VM)
