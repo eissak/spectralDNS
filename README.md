@@ -53,7 +53,7 @@ But note that these require MPI for Python and serial FFTW libraries. See [furth
 
 Usage
 -----
-See the demo folder for extensive usage.
+See demo/guidefield.py for extensive and up-to-date usage.
 
 There are different solvers. For example, there are two Navier Stokes solvers for the triply periodic domain. A regular one (solvers/NS.py), and one based on a velocity-vorticity formulation (solvers/VV.py). The solver of your choice is required as an argument when running:
 
@@ -66,9 +66,9 @@ or
 
 There are many different arguments to each solver. They are all described in config.py. Arguments may be specified on the commandline
 
-    mpirun -np 4 python TG.py --M 6 6 6 --precision single --dealias '3/2-rule' NS
+    mpirun -np 4 python guidefield.py --M 6 6 6 --precision single --dealias '3/2-rule' MHD --hyperdiffusion 2
 
-before the required solver argument. Alternatively, use config.update as shown in demo/TG.py.
+with generic arguments put before, and solver-specific arguments after the solver argument. Alternatively, use config.update as shown in demo/guidefield.py.
 
 To visualize the generated data you can do
 
