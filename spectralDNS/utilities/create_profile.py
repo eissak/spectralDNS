@@ -42,6 +42,7 @@ def create_profile(profiler):
                  'copy_to_padded',
                  'copy_from_padded',
                  'RK4',
+                 'LSRK54',
                  'ForwardEuler',
                  'AB2',
                  'adaptiveRK',

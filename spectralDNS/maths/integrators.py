@@ -174,20 +174,49 @@ def AB2(u0, u1, rhs, dt, tstep, solver, context):
     u1[:] = rhs*dt
     return u0, dt, dt
 
+def LSRK54 (u0, rhs0, rhs, A, B, dt, solver, context):
+    rhs = solver.ComputeRHS(rhs, u0, solver, **context)
+    for i in range(5):
+        u0 += B[i]*dt*rhs
+        if (i < 4):
+            rhs0 = solver.ComputeRHS(rhs0, u0, solver, **context)
+            rhs = A[i+1]*rhs + rhs0
+    return u0, dt, dt
+
 def getintegrator(rhs, u0, solver, context):
     """Return integrator using choice in global parameter integrator.
     """
     params = solver.params
-    u1 = u0.copy()
+    #u1 = u0.copy()
 
     if params.integrator == "RK4":
         # RK4 parameters
         a = np.array([1./6., 1./3., 1./3., 1./6.], dtype=context.float)
         b = np.array([0.5, 0.5, 1.], dtype=context.float)
+        u1 = u0.copy()
         u2 = u0.copy()
         @wraps(RK4)
         def func():
             return RK4(u0, u1, u2, rhs, a, b, params.dt, solver, context)
+        return func
+
+    elif params.integrator == "LSRK54":
+        #Low-storage 5-stage RK4 parameters
+        A  = np.array([0.0,
+                       -567301805773.0 / 1357537059087.0,
+                       -2404267990393.0 / 2016746695238.0,
+                       -3550918686646.0 / 2091501179385.0,
+                       -1275806237668.0 / 842570457699.0], dtype=context.float)
+
+        B = np.array([1432997174477.0 / 9575080441755.0,
+                      5161836677717.0 / 13612068292357.0,
+                      1720146321549.0 / 2090206949498.0,
+                      3134564353537.0 / 4481467310338.0,
+                      2277821191437.0 / 14882151754819.0], dtype=context.float)
+        rhs0 = rhs.copy()
+        @wraps(LSRK54)
+        def func():
+            return LSRK54(u0, rhs0, rhs, A, B, params.dt, solver, context)
         return func
 
     elif params.integrator in ("BS5_adaptive", "BS5_fixed"):
@@ -206,6 +235,7 @@ def getintegrator(rhs, u0, solver, context):
                       [587/8064, 0, 4440339/15491840, 24353/124800, 387/44800, 2152/5985, 7267/94080, 0]], dtype=context.float)
         b = np.array([587/8064, 0, 4440339/15491840, 24353/124800, 387/44800, 2152/5985, 7267/94080, 0], dtype=context.float)
         bhat = np.array([2479/34992, 0, 123/416, 612941/3411720, 43/1440, 2272/6561, 79937/1113912, 3293/556956], dtype=context.float)
+        u1 = u0.copy()
         err_order = 4
         errnorm = "2"
         fsal = True
@@ -233,6 +263,7 @@ def getintegrator(rhs, u0, solver, context):
         return func
 
     elif params.integrator == "AB2":
+        u1 = u0.copy()
         @wraps(AB2)
         def func():
             return AB2(u0, u1, rhs, params.dt, params.tstep, solver, context)

@@ -27,7 +27,7 @@ Generic parameters for all solvers::
     convection       (str)           ('Standard', 'Divergence', 'Skewed', 'Vortex')
 
 Parameters for 3D explicit solvers::
-    integrator       (str)           ('RK4', 'ForwardEuler', 'AB2', 'BS5_adaptive', 'BS5_fixed')
+    integrator       (str)           ('RK4', 'LSRK54', 'ForwardEuler', 'AB2', 'BS5_adaptive', 'BS5_fixed')
     TOL              (float)         Accuracy used in BS5_adaptive
 
 Solver specific parameters triply periodic domain::
@@ -222,7 +222,7 @@ triplyperiodic.add_argument('--M', default=[6, 6, 6], metavar=("Mx", "My", "Mz")
 triplyperiodic.add_argument('--TOL', type=float, default=1e-6,
                             help='Tolerance for adaptive time integrator')
 triplyperiodic.add_argument('--integrator', default='RK4',
-                            choices=('RK4', 'ForwardEuler', 'AB2', 'BS5_adaptive', 'BS5_fixed'),
+                            choices=('RK4', 'LSRK54', 'ForwardEuler', 'AB2', 'BS5_adaptive', 'BS5_fixed'),
                             help='Integrator for triply periodic domain')
 
 trippelsubparsers = triplyperiodic.add_subparsers(dest='solver')
@@ -242,7 +242,7 @@ parser_Bq.add_argument('--Pr', default=1.0, type=float, help='Prandtl number')
 # Arguments for 2D periodic solvers
 doublyperiodic = argparse.ArgumentParser(parents=[parser])
 doublyperiodic.add_argument('--integrator', default='RK4',
-                            choices=('RK4', 'ForwardEuler', 'AB2', 'BS5_fixed', 'BS5_adaptive'),
+                            choices=('RK4', 'LSRK54', 'ForwardEuler', 'AB2', 'BS5_fixed', 'BS5_adaptive'),
                             help='Integrator for doubly periodic domain')
 doublyperiodic.add_argument('--L', default=[2*pi, 2*pi], nargs=2, metavar=('Lx', 'Ly'),
                             help='Physical mesh size')
