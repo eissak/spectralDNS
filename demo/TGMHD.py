@@ -33,7 +33,7 @@ if __name__ == '__main__':
          'eta': 0.01,
          'L': [2*pi, 4*pi, 6*pi],
          'M': [4, 5, 6],
-         'convection': 'Divergence'})
+         'convection': 'Divergence'}, 'MHD')
     solver = get_solver(regression_test=regression_test)
     context = solver.get_context()
     initialize(**context)
