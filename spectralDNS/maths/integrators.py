@@ -174,6 +174,7 @@ def AB2(u0, u1, rhs, dt, tstep, solver, context):
     u1[:] = rhs*dt
     return u0, dt, dt
 
+@optimizer
 def LSRK54 (u0, rhs0, rhs, A, B, dt, solver, context):
     rhs = solver.ComputeRHS(rhs, u0, solver, **context)
     for i in range(5):
