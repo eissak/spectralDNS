@@ -175,13 +175,13 @@ def AB2(u0, u1, rhs, dt, tstep, solver, context):
     return u0, dt, dt
 
 @optimizer
-def LSRK54 (u0, rhs0, rhs, A, B, dt, solver, context):
-    rhs = solver.ComputeRHS(rhs, u0, solver, **context)
-    for i in range(5):
-        u0 += B[i]*dt*rhs
-        if (i < 4):
-            rhs0 = solver.ComputeRHS(rhs0, u0, solver, **context)
-            rhs = A[i+1]*rhs + rhs0
+def LSRK54 (u0, rhs, A, B, dt, solver, context):
+    rhs0 = np.empty(rhs.shape)
+    for rk in range(5):
+        rhs = solver.ComputeRHS(rhs, u0, solver, **context)
+        rhs0 = rhs
+        rhs = A[rk]*rhs + rhs0
+        u0 += B[rk]*dt*rhs
     return u0, dt, dt
 
 def getintegrator(rhs, u0, solver, context):

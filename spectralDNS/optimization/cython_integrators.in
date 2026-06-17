@@ -52,7 +52,6 @@ def RK4(np.ndarray[complex_t, ndim=4] U_hat,
     return U_hat, dt, dt
 
 def LSRK54(np.ndarray[complex_t, ndim=4] U_hat,
-        np.ndarray[complex_t, ndim=4] dU0,
         np.ndarray[complex_t, ndim=4] dU,
         np.ndarray[real_t, ndim=1] A,
         np.ndarray[real_t, ndim=1] B,
@@ -60,24 +59,26 @@ def LSRK54(np.ndarray[complex_t, ndim=4] U_hat,
         solver,
         context):
     cdef unsigned int rk, i, j, k, l
-    dU = solver.ComputeRHS(dU, U_hat, solver, **context)
+    cdef complex_t[:,:,:,::1] U_hat_view = U_hat
+    cdef complex_t[:,:,:,::1] dU_view = dU
+    cdef complex_t[:,:,:,::1] RHS_view
+
+    cdef real_t[::1] A_view = A
+    cdef real_t[::1] B_view = B
+
     for rk in range(5):
+        dU = solver.ComputeRHS(dU, U_hat, solver, **context)
+        RHS_view = dU
         with nogil:
             for i in range(U_hat.shape[0]):
                 for j in range(U_hat.shape[1]):
                     for k in range(U_hat.shape[2]):
                         for l in range(U_hat.shape[3]):
-                            U_hat[i,j,k,l] = U_hat[i,j,k,l] + B[rk]*dt*dU[i,j,k,l]
-        if rk < 4:
-            dU0 = solver.ComputeRHS(dU0, U_hat, solver, **context)
-            with nogil:
-                for i in range(dU.shape[0]):
-                    for j in range(dU.shape[1]):
-                        for k in range(dU.shape[2]):
-                            for l in range(dU.shape[3]):
-                                dU[i,j,k,l] = A[rk+1]*dU[i,j,k,l] + dU0[i,j,k,l]
+                            dU_view[i,j,k,l] = A_view[rk]*dU_view[i,j,k,l] + RHS_view[i,j,k,l]
+                            U_hat_view[i,j,k,l] += B_view[rk]*dt*dU_view[i,j,k,l]
 
     return U_hat, dt, dt
+
 
 def ForwardEuler(np.ndarray[complex_t, ndim=4] U_hat,
                  np.ndarray[complex_t, ndim=4] U_hat0,
