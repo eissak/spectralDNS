@@ -201,6 +201,7 @@ def set_Elsasser_(np.ndarray[complex_t, ndim=4] c,
     
     cdef unsigned int n, i, j , k 
     cdef real_t k0, k1, k2
+    cdef complex_t kz0, kz1
     cdef complex_t[:,:,:,::1] c_view = c
     cdef complex_t[:,:,:,:,::1] ZZ_view = ZZ
     cdef real_t[::1] kx_view = kx
@@ -215,13 +216,19 @@ def set_Elsasser_(np.ndarray[complex_t, ndim=4] c,
                     k1 = ky_view[j]
                     for k in range(c.shape[3]):
                         k2 = kz_view[k]
+                       
+                        kz0 = k0*ZZ_view[0,n,i,j,k] + k1*ZZ_view[1,n,i,j,k] + k2*ZZ_view[2,n,i,j,k]
+                        kz1 = k0*ZZ_view[n,0,i,j,k] + k1*ZZ_view[n,1,i,j,k] + k2*ZZ_view[n,2,i,j,k]
 
-                        c_view[n,i,j,k] = -0.5j*(k0 * (ZZ_view[0,n,i,j,k] + ZZ_view[n,0,i,j,k]) +
-                                                 k1 * (ZZ_view[1,n,i,j,k] + ZZ_view[n,1,i,j,k]) +
-                                                 k2 * (ZZ_view[2,n,i,j,k] + ZZ_view[n,2,i,j,k]))
+                        c_view[n,i,j,k] = -0.5j*(kz0 + kz1)
+                        c_view[n+3,i,j,k] = 0.5j*(kz0 - kz1)
 
-                        c_view[n+3,i,j,k] = 0.5j*(k0 * (ZZ_view[0,n,i,j,k] - ZZ_view[n,0,i,j,k]) +
-                                                  k1 * (ZZ_view[1,n,i,j,k] - ZZ_view[n,1,i,j,k]) +
-                                                  k2 * (ZZ_view[2,n,i,j,k] - ZZ_view[n,2,i,j,k]))
+                        #c_view[n,i,j,k] = -0.5j*(k0 * (ZZ_view[0,n,i,j,k] + ZZ_view[n,0,i,j,k]) +
+                        #                         k1 * (ZZ_view[1,n,i,j,k] + ZZ_view[n,1,i,j,k]) +
+                        #                         k2 * (ZZ_view[2,n,i,j,k] + ZZ_view[n,2,i,j,k]))
+
+                        #c_view[n+3,i,j,k] = 0.5j*(k0 * (ZZ_view[0,n,i,j,k] - ZZ_view[n,0,i,j,k]) +
+                        #                          k1 * (ZZ_view[1,n,i,j,k] - ZZ_view[n,1,i,j,k]) +
+                        #                          k2 * (ZZ_view[2,n,i,j,k] - ZZ_view[n,2,i,j,k]))
 
     return c
