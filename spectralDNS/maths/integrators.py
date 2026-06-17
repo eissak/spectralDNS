@@ -217,7 +217,7 @@ def getintegrator(rhs, u0, solver, context):
         rhs0 = rhs.copy()
         @wraps(LSRK54)
         def func():
-            return LSRK54(u0, rhs0, rhs, A, B, params.dt, solver, context)
+            return LSRK54(u0, rhs, rhs0, A, B, params.dt, solver, context)
         return func
 
     elif params.integrator in ("BS5_adaptive", "BS5_fixed"):

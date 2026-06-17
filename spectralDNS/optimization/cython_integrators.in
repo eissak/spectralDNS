@@ -53,6 +53,7 @@ def RK4(np.ndarray[complex_t, ndim=4] U_hat,
 
 def LSRK54(np.ndarray[complex_t, ndim=4] U_hat,
         np.ndarray[complex_t, ndim=4] dU,
+        np.ndarray[complex_t, ndim=4] RHS,
         np.ndarray[real_t, ndim=1] A,
         np.ndarray[real_t, ndim=1] B,
         real_t dt,
@@ -61,14 +62,13 @@ def LSRK54(np.ndarray[complex_t, ndim=4] U_hat,
     cdef unsigned int rk, i, j, k, l
     cdef complex_t[:,:,:,::1] U_hat_view = U_hat
     cdef complex_t[:,:,:,::1] dU_view = dU
-    cdef complex_t[:,:,:,::1] RHS_view
+    cdef complex_t[:,:,:,::1] RHS_view = RHS
 
     cdef real_t[::1] A_view = A
     cdef real_t[::1] B_view = B
 
     for rk in range(5):
-        dU = solver.ComputeRHS(dU, U_hat, solver, **context)
-        RHS_view = dU
+        RHS = solver.ComputeRHS(RHS, U_hat, solver, **context)
         with nogil:
             for i in range(U_hat.shape[0]):
                 for j in range(U_hat.shape[1]):
