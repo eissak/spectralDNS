@@ -188,3 +188,40 @@ def add_pressure_diffusion_MHD_(np.ndarray[complex_t, ndim=4] du,
                 du[5,i,j,k].real = du[5,i,j,k].real - u_hat[5,i,j,k].real*z1
                 du[5,i,j,k].imag = du[5,i,j,k].imag - u_hat[5,i,j,k].imag*z1
     return du
+
+def set_Elsasser(c, ZZ, K):
+    c = set_Elsasser_(c, ZZ, K[0][:,0,0], K[1][0,:,0], K[2][0,0,:])
+    return c
+
+def set_Elsasser_(np.ndarray[complex_t, ndim=4] c, 
+                  np.ndarray[complex_t, ndim=5] ZZ, 
+                  np.ndarray[real_t, ndim=1] kx,
+                  np.ndarray[real_t, ndim=1] ky,
+                  np.ndarray[real_t, ndim=1] kz):
+    
+    cdef unsigned int n, i, j , k 
+    cdef real_t k0, k1, k2
+    cdef complex_t[:,:,:,::1] c_view = c
+    cdef complex_t[:,:,:,:,::1] ZZ_view = ZZ
+    cdef real_t[::1] kx_view = kx
+    cdef real_t[::1] ky_view = ky
+    cdef real_t[::1] kz_view = kz
+
+    with nogil:
+        for n in range(3):
+            for i in range(c.shape[1]):
+                k0 = kx_view[i]        
+                for j in range(c.shape[2]):
+                    k1 = ky_view[j]
+                    for k in range(c.shape[3]):
+                        k2 = kz_view[k]
+
+                        c_view[n,i,j,k] = -0.5j*(k0 * (ZZ_view[0,n,i,j,k] + ZZ_view[n,0,i,j,k]) +
+                                                 k1 * (ZZ_view[1,n,i,j,k] + ZZ_view[n,1,i,j,k]) +
+                                                 k2 * (ZZ_view[2,n,i,j,k] + ZZ_view[n,2,i,j,k]))
+
+                        c_view[n+3,i,j,k] = 0.5j*(k0 * (ZZ_view[0,n,i,j,k] - ZZ_view[n,0,i,j,k]) +
+                                                  k1 * (ZZ_view[1,n,i,j,k] - ZZ_view[n,1,i,j,k]) +
+                                                  k2 * (ZZ_view[2,n,i,j,k] - ZZ_view[n,2,i,j,k]))
+
+    return c

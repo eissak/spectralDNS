@@ -107,6 +107,7 @@ def get_divergence(T, K, U_hat, **context):
     div_u = T.backward(1j*(K[0]*U_hat[0]+K[1]*U_hat[1]+K[2]*U_hat[2]), div_u)
     return div_u
 
+@optimizer
 def set_Elsasser(c, ZZ, K):
     c[:3] = -1j*(K[0]*(ZZ[:, 0] + ZZ[0, :])
                  + K[1]*(ZZ[:, 1] + ZZ[1, :])
