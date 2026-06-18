@@ -81,13 +81,11 @@ def LSRK54(np.ndarray[complex_t, ndim=4] U_hat,
 
 
 def ForwardEuler(np.ndarray[complex_t, ndim=4] U_hat,
-                 np.ndarray[complex_t, ndim=4] U_hat0,
                  np.ndarray[complex_t, ndim=4] dU,
                  real_t dt,
                  solver,
                  context):
-    cdef complex_t z
-    cdef unsigned int rk, i, j, k, l
+    cdef unsigned int i, j, k, l
     dU = solver.ComputeRHS(dU, U_hat, solver, **context)
     for i in range(dU.shape[0]):
         for j in range(dU.shape[1]):
